@@ -97,3 +97,9 @@ export default function VerifyOtp({ email, message }) {
         </>
     );
 }
+
+
+//Login Credentials:
+
+Email: adminone@gmail.com
+Password: adminone

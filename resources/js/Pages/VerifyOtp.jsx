@@ -1,0 +1,99 @@
+import { Head, useForm } from "@inertiajs/react";
+import InputError from "@/Components/InputError";
+import TextInput from "@/Components/TextInput";
+import InputLabel from "@/Components/InputLabel";
+import PrimaryButton from "@/Components/PrimaryButton";
+import { useState } from "react";
+import "../../css/Register.css";
+
+export default function VerifyOtp({ email, message }) {
+    const { data, setData, post, processing, errors, reset } = useForm({
+        otp: "",
+        email: email,
+    });
+    const [resendDisabled, setResendDisabled] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    console.log('Errors:', errors);
+    console.log('Data:', data);
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        post(route("otp.verify"), {
+            onError: (err) => {
+                if (err.message) {
+                    setErrorMessage(err.message);
+                }
+            },
+            onFinish: () => {
+                reset("otp");
+                setErrorMessage("");
+            },
+            onSuccess: () => {
+                console.log("OTP Verified.");
+            },
+        });
+    };
+
+    const resendOtp = () => {
+        if (!email) {
+            setErrorMessage("Email is required.");
+            return;
+        }
+        setResendDisabled(true);
+        post(route("forgot-password.send"), {
+            data: { email },
+            onSuccess: () => {
+                console.log("OTP Resent");
+                setTimeout(() => {
+                    setResendDisabled(false);
+                }, 10000);
+            },
+        });
+    };
+
+    return (
+        <>
+            <Head title="PRA | Verify OTP Page" />
+            <div className="container mx-auto animate-fadeIn">
+                <div className="py-4 mb-5 bg-gray-500 text-white text-center">
+                    <p className="text-2xl">Password Reset Application</p>
+                </div>
+                <h2 className="text-2xl font-bold mt-5 mb-5 text-center">Verify OTP</h2>
+                {message && (
+                    <div className="text-center mb-4 text-green-500">
+                        {message}
+                    </div>
+                )}
+                <form onSubmit={submitHandler} className="space-y-6 form-container">
+                    <div>
+                        <InputLabel htmlFor="otp" value="OTP" />
+                        <TextInput
+                            id="otp"
+                            name="otp"
+                            type="text"
+                            value={data.otp}
+                            className="input-field"
+                            autoComplete="one-time-code"
+                            onChange={(e) => setData("otp", e.target.value)}
+                        />
+                        <InputError message={errors.otp} className="text-red-500 text-sm mt-2" />
+                    </div>
+                    {errorMessage && <p className="text-red-500 text-sm text-center">{errorMessage}</p>}
+                    <div className="text-center">
+                        <PrimaryButton className="submit-button" disabled={processing}>
+                            {processing ? "Verifying..." : "Verify OTP"}
+                        </PrimaryButton>
+                        <PrimaryButton
+                            type="button"
+                            className="submit-button ml-5"
+                            onClick={resendOtp}
+                            disabled={resendDisabled}
+                        >
+                            {resendDisabled ? "Resend OTP in 10 seconds" : "Resend OTP"}
+                        </PrimaryButton>
+                    </div>
+                </form>
+            </div>
+        </>
+    );
+}

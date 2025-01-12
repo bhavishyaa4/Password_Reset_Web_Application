@@ -90,3 +90,20 @@
     text-decoration: underline;
 }
 
+.w-12 {
+    width: 3rem;
+}
+.h-12 {
+    height: 3rem;
+}
+.text-xl {
+    font-size: 1.25rem;
+}
+.border {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.text-center {
+    text-align: center;
+}
+

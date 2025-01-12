@@ -33,7 +33,7 @@ class RegistrationController extends Controller
             'name' => 'required|string|max:50',
             'username' => 'required|string|max:50|unique:applicant',
             'email' => 'required|email|max:50|unique:applicant',
-            'password' => 'required|string|min:5|confirmed',
+            'password' => 'required|string|min:6|confirmed',
             'number' => 'required|numeric|digits:10',
         ]);
 
@@ -367,7 +367,7 @@ class RegistrationController extends Controller
     {
         $validator = Validator::make($req->all(), [
             'otp' => 'required|numeric|digits:6',
-            'password' => 'required|string|min:5|confirmed',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
         if ($validator->fails()) {

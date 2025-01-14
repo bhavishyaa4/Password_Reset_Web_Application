@@ -11,8 +11,8 @@ export default function Home({ name }) {
         e.preventDefault();
 
         const isConfirmed = window.confirm("Are you sure you want to log out?");
-
-        if (isConfirmed) {
+        
+        if (isConfirmed) {  
             post(route('logout'), {
                 onSuccess: (response) => {
                     console.log('Logout Response:', response);
